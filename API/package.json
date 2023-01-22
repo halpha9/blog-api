@@ -7,6 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node dist/src/index.js",
     "dev": "tsc-watch --onSuccess \"node dist/src/index.js\"",
+    "generate:prisma": "npx prisma migrate deploy",
+    "start:prod": "npx prisma generate && npm run start",
     "seed": "ts-node prisma/seed.ts",
     "build": "tsc"
   },

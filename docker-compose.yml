@@ -1,12 +1,38 @@
 version: "3.7"
 
 services:
-  blog-db:
-    image: postgres:latest
+  ##############################
+  # Backend Container
+  ##############################
+
+  postgres:
+    hostname: postgres:latest
+    image: postgres:12.9
+    container_name: postgres
+    restart: always
     volumes:
       - data:/var/lib/postgresql/data
     env_file: ./.env.local
     ports:
-      - "5001:5432"
+      - "5432:5432"
+
+  api:
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - PORT=${PORT}
+      - DATABASE_URL=${DATABASE_URL}
+    container_name: api
+    restart: always
+    build:
+      context: ./API
+      dockerfile: ./Dockerfile
+    image: "halpha9/blog-api:api-1.0.9"
+    depends_on:
+      - postgres
+    ports:
+      - "4000:4000"
+
 volumes:
   data:
